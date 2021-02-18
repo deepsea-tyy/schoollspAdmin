@@ -8,9 +8,6 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -53,11 +50,6 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
   {
@@ -182,40 +174,19 @@ export const asyncRoutes = [
         meta: { title: '用户列表', icon: 'list' }
       },
       {
-        path: 'view',
-        component: () => import('@/views/user/view'),
-        name: 'UserView',
-        meta: { title: '用户信息'},
-        hidden: true
+        path: 'rider',
+        component: () => import('@/views/user/index'),
+        name: 'Rider',
+        meta: { title: '骑手列表', icon: 'list' }
       },
       {
-        path: 'run',
+        path: 'incharge',
         component: () => import('@/views/user/index'),
-        name: 'run',
-        meta: { title: '跑腿列表', icon: 'list' }
-      },
-      {
-        path: 'aa',
-        component: () => import('@/views/user/index'),
-        name: 'aa',
+        name: 'Incharge',
         meta: { title: '站长列表', icon: 'list' }
       }
     ]
   },
-
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: 'Tab', icon: 'tab' }
-      }
-    ]
-  },
-
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
