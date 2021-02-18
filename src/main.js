@@ -19,7 +19,9 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
+import * as fun from './fun'
 
+Vue.prototype.$fun = fun    //挂载vux
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

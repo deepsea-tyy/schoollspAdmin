@@ -48,14 +48,14 @@ service.interceptors.response.use(
       })
     }else{
       let msg = '';
-      if(typeof(err.message) == 'object'){
-        for (let key in err.message) {
-          msg = err.message[key][0]
+      if(typeof(res.message) == 'object'){
+        for (let key in res.message) {
+          msg = res.message[key][0]
           break
         }
       }
       Message({
-        message: msg || 'Error',
+        message: msg || res.message ||'Error',
         type: 'error',
         duration: 5 * 1000
       })
