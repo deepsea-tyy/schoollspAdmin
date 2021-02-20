@@ -37,17 +37,6 @@ import componentsRouter from './modules/components'
  */
 export const constantRoutes = [
   {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -184,6 +173,24 @@ export const asyncRoutes = [
         component: () => import('@/views/user/index'),
         name: 'Incharge',
         meta: { title: '站长列表', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/school',
+    component: Layout,
+    redirect: '/school/index',
+    name: 'school',
+    meta: {
+      title: '学校',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/school/index'),
+        name: 'SchoolIndex',
+        meta: { title: '学校列表', icon: 'list' }
       }
     ]
   },
