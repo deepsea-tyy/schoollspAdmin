@@ -51,7 +51,17 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
   {
     path: '/',
     component: Layout,
@@ -191,6 +201,31 @@ export const asyncRoutes = [
         component: () => import('@/views/school/index'),
         name: 'SchoolIndex',
         meta: { title: '学校列表', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/index',
+    name: 'Order',
+    meta: {
+      title: '学校',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/order/index'),
+        name: 'OrderIndex',
+        meta: { title: '订单列表', icon: 'list' }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/order/edit'),
+        name: 'OrderEdit',
+        meta: { title: '订单详情', icon: 'list' },
+        hidden: true
       }
     ]
   },

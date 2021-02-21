@@ -24,6 +24,14 @@ export function schoolUpdate(data) {
   })
 }
 
+export function schoolDelete(data) {
+  return request({
+    url: '/runerrands/school/delete',
+    method: 'post',
+    data
+  })
+}
+
 export function schoolView(id) {
   return request({
     url: '/runerrands/school/view',
