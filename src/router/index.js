@@ -97,7 +97,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
+  /*{
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
@@ -137,10 +137,10 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
+  },*/
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  // componentsRouter,
 
   {
     path: '/user',
@@ -210,7 +210,7 @@ export const asyncRoutes = [
     redirect: '/order/index',
     name: 'Order',
     meta: {
-      title: '学校',
+      title: '订单',
       icon: 'el-icon-s-help'
     },
     children: [
@@ -226,6 +226,56 @@ export const asyncRoutes = [
         name: 'OrderEdit',
         meta: { title: '订单详情', icon: 'list' },
         hidden: true
+      }
+    ]
+  },
+  {
+    path: '/promotion',
+    component: Layout,
+    redirect: '/promotion/index',
+    name: 'Promotion',
+    meta: {
+      title: '促销',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/promotion/index'),
+        name: 'PromotionIndex',
+        meta: { title: '促销列表', icon: 'list' }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/promotion/edit'),
+        name: 'PromotionEdit',
+        meta: { title: '编辑促销', icon: 'list' },
+        hidden: true
+      },
+      {
+        path: 'coupon',
+        component: () => import('@/views/promotion/coupon'),
+        name: 'PromotionCoupon',
+        meta: { title: '优惠券列表', icon: 'list' },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/runsetting',
+    component: Layout,
+    redirect: '/runsetting/edit',
+    name: 'Runsetting',
+    meta: {
+      title: '财务',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'edit',
+        component: () => import('@/views/runsetting/edit'),
+        name: 'PromotionEdit',
+        meta: { title: '财务设置', icon: 'list' }
       }
     ]
   },

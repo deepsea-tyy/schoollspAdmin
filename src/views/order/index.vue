@@ -26,7 +26,7 @@
     <el-tab-pane label="已取消" name="8"></el-tab-pane>
   </el-tabs>
 
-    <el-table v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%" :tree-props="{children: 'area', hasChildren: 'hasChildren'}">
+    <el-table v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="订单类型">
         <template slot-scope="scope">
           {{ scope.row.type==2?'取快递':(scope.row.type==3?'外卖代拿':(scope.row.type==4?'校园跑腿':'其他帮助')) }}
@@ -43,7 +43,7 @@
       <el-table-column label="用户">
         <template slot-scope="scope">
           <div>{{ (scope.row.realName)?scope.row.realName.name:'' }}</div>
-          <div>{{ scope.row.type==4?scope.row.runerrands.phone:scope.row.shipAddress.phone }}</div>
+          <div>{{ scope.row.type==4?(scope.row.runerrands?scope.row.runerrands.phone:''):(scope.row.shipAddress?scope.row.shipAddress.phone:'') }}</div>
           
         </template>
       </el-table-column>
