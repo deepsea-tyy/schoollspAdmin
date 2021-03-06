@@ -276,6 +276,12 @@ export const asyncRoutes = [
         component: () => import('@/views/runsetting/edit'),
         name: 'PromotionEdit',
         meta: { title: '财务设置', icon: 'list' }
+      },
+      {
+        path: 'drawlist',
+        component: () => import('@/views/runsetting/drawlist'),
+        name: 'Drawlist',
+        meta: { title: '提现列表', icon: 'list' }
       }
     ]
   },

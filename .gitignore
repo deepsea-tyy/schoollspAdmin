@@ -2,3 +2,5 @@ mock
 plop-templates
 src/icons
 src/assets/custom-theme
+src/directive
+src/views/components-demo

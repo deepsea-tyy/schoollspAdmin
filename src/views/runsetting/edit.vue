@@ -1,105 +1,147 @@
 <template>
   <div class="app-container">
-    <div style="background: #fff;padding: 20px;">
-      <div style="margin-bottom: 20px;padding-bottom:20px;border-bottom: 1px solid #C9C9C9;">基础设置</div>
-      <el-form :label-position="labelPosition" label-width="150px" :model="model">
-        <el-form-item label="基础配送费：">
-          <el-input v-model="model.basic_cost"></el-input>* 单位(￥)
-        </el-form-item>
-        <el-form-item label="重量附加费：">
-          <div v-for="(item,index) in model.weight_cost" style="overflow: hidden;">
-            <div style="float: left;margin-bottom: 5px;margin-right: 5px;">
-              <el-input v-model="item.title"></el-input>
-            </div>
-            <div style="float: left;margin-bottom: 5px;margin-right: 5px;">  
-              <el-input v-model="item.price"></el-input>
-            </div>
-            <div @click="remove(index)" style="float: left;margin-bottom: 5px;margin-right: 5px;background: red;color: #fff;width: 50px;text-align: center;">
-              X
-            </div>
-          </div>
-          <div>
-            <el-button type="primary" @click="addRow">+ 添加</el-button>
-          </div>
-        </el-form-item>
-        <el-form-item label="特殊时段费：">
-          <el-input v-model="model.lunch_time_cost"></el-input>午餐
-          <el-input v-model="model.dinner_time_cost"></el-input>晚餐
-        </el-form-item>
-        <el-form-item label="配送难度费：">
-          <el-input v-model="model.difficulty_cost"></el-input>5楼以上
-        </el-form-item>
-        <el-form-item label="特殊天气费：">
-          <el-input v-model="model.weather_cist"></el-input>雨天、雪天额外加收费用
-        </el-form-item>
-        <el-form-item label="平台抽成：">
-          <el-input v-model="model.platform_perc"></el-input>* 1-100 单位（%）
-        </el-form-item>
-        <el-form-item label="站长抽成：">
-          <el-input v-model="model.stationmaster_perc"></el-input>* 1-100 单位（%）
-        </el-form-item>
+    <div style="background: #fff;margin-bottom: 20px;padding: 20px 10px">
+      <el-steps v-if="model.status!=2" :active="model.status?(model.status==3?2:3):1" align-center>
+        <el-step title="申请中" description="$fun.formatDate( model.created_at,1)"></el-step>
+        <el-step title="平台审核" description=""></el-step>
+        <el-step title="平台打款" description=""></el-step>
+      </el-steps>
+      <h3 v-if="model.status==2">已驳回</h3>
+    </div>
+    <div class="card">
+      <div class="left">
+        <div class="title">提现信息</div>
+        <div class="content">
+          <p>提现编号：{{model.id}}</p>
+          <p>姓名：{{model.rider.name}}</p>
+          <p>联系电话：{{model.rider.phone}}</p>
+          <p>学校：{{ model.school?model.school.name:'' }} {{ model.schoolArea?model.schoolArea.name:'' }}</p>
+        </div>
+      </div>
+      <div class="right">
+        <div class="title">提现信息</div>
+        <div class="content">
+          <p>提现方式： 微信零钱</p>
+          <p>提现金额：<a style="color: red">¥{{model.money}}</a></p>
+        </div>
+      </div>
+    </div>
 
-        <div style="margin-bottom: 20px;padding-bottom:20px;border-bottom: 1px solid #C9C9C9;">基础设置</div>
-        <el-form-item label="结算方式：">
-          <el-radio-group v-model="model.settlement_type">
-            <el-radio :label="1">微信零钱</el-radio>
-            <el-radio :label="2">银行卡</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="最低结算额度：">
-          <el-input v-model="model.settlement_least"></el-input>余额大于或等于最低提现额度方可提现
-        </el-form-item>
-        <el-form-item label="月结算日：">
-          <el-input v-model="model.settlement_date"></el-input>每个月固定结算日期
-        </el-form-item>
-
-        <el-form-item size="large">
-          <el-button type="primary" @click="save">保存</el-button>
-        </el-form-item>
-      </el-form>
+    <div class="item">
+      <div class="title">打款信息</div>
+      <div class="content">
+        <p>申请金额：<a>¥{{model.money}}</a></p>
+        <p>提现手续费：<a>¥{{model.commission}}</a></p>
+      </div>
+      <el-button v-if="!model.status" @click="edit(model.id,2)" type="danger">驳回申请</el-button>
+      <el-button v-if="!model.status" @click="edit(model.id,3)" type="primary">提交审核</el-button>
+      <el-button v-if="model.status==3" @click="edit(model.id,1)" type="primary">打款</el-button>
+      <el-button @click="$router.push({path:'/runsetting/drawlist'})">返回列表</el-button>
     </div>
   </div>
     
 </template>
 <script>
-import { costCreate, costView, costUpdate } from '@/api/runsetting'
+import { drawMoneyView,drawMoneyUpdate } from '@/api/runsetting'
 
 export default {
-  name: 'RunsettingEdit',
+  name: 'OrderEdit',
   data() {
     return {
-      labelPosition: 'right',
       model: {
-        settlement_type:0,
-        weight_cost:[]
+        rider:{},
+        status:0
       }
     }
   },
   created() {
-    this.getData()
+    let id = this.$route.query.id
+    this.getData(id)
   },
   methods: {
     async getData(id) {
-      this.model = await costView()
+      this.model = await drawMoneyView(id)
     },
-    async save(){
-      if (this.model.owner_id) {
-        await costUpdate(this.model)
-      }else{
-        await costCreate(this.model)
-      }
+
+    edit(id,status) {
+      this.id = id
+      this.status = status
+      this.$confirm('确定此操作码？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.save()
+        }).catch(() => {
+        })
+    },
+    async save() {
+      await drawMoneyUpdate({id:this.id,status:this.status})
+      this.model.status = this.status
       this.$message({
         type: 'success',
-        message: '保存成功!'
-      })
+        message: '操作成功!'
+      });
     },
-    addRow(){
-      this.model.weight_cost.push({title:'',price:''})
-    },
-    remove(index){
-      this.model.weight_cost.splice(index, 1)
-    }
   }
 }
 
 </script>
+<style lang="scss">
+.card {
+  color: #666666;
+  font-size: 15px;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  .left{
+    float: left;
+  }
+  .right{
+    float: right;
+  }
+  .left,.right{
+    background: #fff;
+    overflow: hidden;
+    width: 49%;
+  }
+  .title{
+    color: #000000;
+    padding: 10px;
+    border-bottom: 1px solid #F7F7F7;
+    margin-bottom: 10px;
+  }
+  .content{
+    margin-left: 35px;
+    margin-right: 35px;
+  }
+}
+.item{
+  color: #666666;
+  font-size: 15px;
+  background: #fff;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+
+  .title{
+    color: #000000;
+    padding: 10px;
+    border-bottom: 1px solid #F7F7F7;
+    margin-bottom: 10px;
+  }
+  .content{
+    margin-left: 20px;
+  }
+  .sitem{
+    margin-left: 45px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F7F7F7;
+  }
+  .step{
+    color: #000000;
+  }
+  a{
+    color: #FF0000;
+  }
+}
+</style>

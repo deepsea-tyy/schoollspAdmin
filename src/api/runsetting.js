@@ -22,3 +22,26 @@ export function costView() {
     method: 'get'
   })
 }
+
+export function drawMoneyList(params) {
+  return request({
+    url: '/user/user-fund/draw-money-list',
+    method: 'get',
+    params:params
+  })
+}
+
+export function drawMoneyUpdate(data) {
+  return request({
+    url: '/user/user-fund/draw-money-update',
+    method: 'post',
+    data
+  })
+}
+export function drawMoneyView(id) {
+  return request({
+    url: '/user/user-fund/draw-money-view',
+    method: 'get',
+    params:{id:id}
+  })
+}
