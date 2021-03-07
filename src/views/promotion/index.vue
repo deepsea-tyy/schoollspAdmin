@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-        <el-button type="primary" @click="add(0)">+添加优惠券</el-button>
+        <el-button type="primary" @click="$router.push({path:'/promotion/edit'})">+添加优惠券</el-button>
     </div>
 
     <el-table v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
