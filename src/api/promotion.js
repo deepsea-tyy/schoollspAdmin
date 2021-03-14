@@ -23,3 +23,20 @@ export function couponList(query) {
     params: query
   })
 }
+
+export function promotionCreate(data) {
+  return request({
+    url: '/promotion/promotion/create',
+    method: 'post',
+    data
+  })
+}
+
+
+export function promotionUpdate(data) {
+  return request({
+    url: '/promotion/promotion/update',
+    method: 'post',
+    data
+  })
+}

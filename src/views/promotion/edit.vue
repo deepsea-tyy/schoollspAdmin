@@ -8,7 +8,8 @@
         </el-form-item>
 
         <el-form-item label="发放学校">
-          <div>
+          <div>{{schoolName+schoolAreaName}}</div>
+          <div style="overflow: hidden;">
             <div style="float: left;width: 200px;margin-right: 20px">
                 <page-select 
                 v-model="value"
@@ -24,12 +25,12 @@
                 
             </div>
             <div v-if="schoolAreaShow" style="float: left;margin-top: 10px">
-              <el-select v-model="model.school_area_id" placeholder="请选择校区">
+              <el-select v-model="schoolAreaName" @change="schoolAreaChange" placeholder="请选择校区">
                 <el-option
                   v-for="item in schoolArea"
                   :key="item.id"
                   :label="item.name"
-                  :value="item.id">
+                  :value="item">
                 </el-option>
               </el-select>
             </div>
@@ -76,7 +77,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="save()" type="primary">保存</el-button>
-          <el-button>返回</el-button>
+          <el-button @click="$router.push({path:'/promotion/index'})">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -84,7 +85,7 @@
     
 </template>
 <script>
-import { promotionVew } from '@/api/promotion'
+import { promotionVew,promotionCreate,promotionUpdate } from '@/api/promotion'
 import { schoolList } from '@/api/school'
 import pageSelect from 'page-select'
 
@@ -134,19 +135,32 @@ export default {
           name:'订单折扣',
           value:5
         },
-      ]
+      ],
+      schoolName:'',
+      schoolAreaName:'',
     }
   },
   created() {
+    this.getQuery(this.pageData)
+  },
+  mounted() {
     let id = this.$route.query.id
     if (id) {
       this.getData(id)
     }
-    this.getQuery(this.pageData)
   },
   methods: {
     async getData(id) {
-      this.model = await promotionVew(id)
+      let res = await promotionVew(id)
+      res.start_at = this.$fun.formatDate(res.start_at)
+      res.end_at = this.$fun.formatDate(res.end_at)
+      if (res.schoolArea) {
+        this.schoolAreaName = res.schoolArea.name
+      }
+      if (res.school) {
+        this.schoolName = res.school.name
+      }
+      this.model = res
     },
     getQuery(val){
       // val为请求所需参数 console.log(val)
@@ -160,6 +174,12 @@ export default {
     getSelectData(item){
       this.getSchool({parent_id:item.id},2)
       this.model.school_id = item.id
+      this.schoolName = item.name
+    },
+    schoolAreaChange(item){
+      console.log(item)
+      this.schoolAreaName = item.name
+      this.model.school_area_id = item.id
     },
     async getSchool(params,type){
       let res = await schoolList(params)
@@ -174,66 +194,18 @@ export default {
     },
     async save(){
       console.log(this.model)
+      if (this.model.id) {
+        await promotionUpdate(this.model)
+      }else{
+        await promotionCreate(this.model)
+      }
+      this.$message({
+        type: 'success',
+        message: '保存成功!'
+      })
+      this.$router.push({path:'/promotion/index'})
     }
   }
 }
 
 </script>
-<style lang="scss">
-.card {
-  color: #666666;
-  font-size: 15px;
-  overflow: hidden;
-  margin-bottom: 20px;
-
-  .left{
-    float: left;
-  }
-  .right{
-    float: right;
-  }
-  .left,.right{
-    background: #fff;
-    overflow: hidden;
-    width: 49%;
-  }
-  .title{
-    color: #000000;
-    padding: 10px;
-    border-bottom: 1px solid #F7F7F7;
-    margin-bottom: 10px;
-  }
-  .content{
-    margin-left: 35px;
-    margin-right: 35px;
-  }
-}
-.item{
-  color: #666666;
-  font-size: 15px;
-  background: #fff;
-  padding-bottom: 5px;
-  margin-bottom: 20px;
-
-  .title{
-    color: #000000;
-    padding: 10px;
-    border-bottom: 1px solid #F7F7F7;
-    margin-bottom: 10px;
-  }
-  .content{
-    margin-left: 20px;
-  }
-  .sitem{
-    margin-left: 45px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #F7F7F7;
-  }
-  .step{
-    color: #000000;
-  }
-  a{
-    color: #FF0000;
-  }
-}
-</style>

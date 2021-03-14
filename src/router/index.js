@@ -224,7 +224,7 @@ export const asyncRoutes = [
         path: 'edit',
         component: () => import('@/views/order/edit'),
         name: 'OrderEdit',
-        meta: { title: '订单详情', icon: 'list' },
+        meta: { title: '订单详情', icon: 'list', noCache: true },
         hidden: true
       }
     ]
@@ -249,7 +249,7 @@ export const asyncRoutes = [
         path: 'edit',
         component: () => import('@/views/promotion/edit'),
         name: 'PromotionEdit',
-        meta: { title: '编辑促销', icon: 'list' },
+        meta: { title: '编辑促销', icon: 'list', noCache: true },
         hidden: true
       },
       {
@@ -274,14 +274,45 @@ export const asyncRoutes = [
       {
         path: 'edit',
         component: () => import('@/views/runsetting/edit'),
-        name: 'PromotionEdit',
-        meta: { title: '财务设置', icon: 'list' }
+        name: 'costEdit',
+        meta: { title: '提现详情', icon: 'list', noCache: true },
+        hidden: true
       },
       {
         path: 'drawlist',
         component: () => import('@/views/runsetting/drawlist'),
         name: 'Drawlist',
         meta: { title: '提现列表', icon: 'list' }
+      },
+      {
+        path: 'costset',
+        component: () => import('@/views/runsetting/costset'),
+        name: 'costset',
+        meta: { title: '财务设置', icon: 'list', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    redirect: '/setting/web',
+    name: 'setting',
+    meta: {
+      title: '设置',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'web',
+        component: () => import('@/views/setting/web'),
+        name: 'settingweb',
+        meta: { title: '系统设置', icon: 'list', noCache: true },
+      },
+      {
+        path: 'pay',
+        component: () => import('@/views/setting/web'),
+        name: 'settingpay',
+        meta: { title: '支付设置', icon: 'list', noCache: true },
       }
     ]
   },

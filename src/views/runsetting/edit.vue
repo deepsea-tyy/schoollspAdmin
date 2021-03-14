@@ -2,7 +2,7 @@
   <div class="app-container">
     <div style="background: #fff;margin-bottom: 20px;padding: 20px 10px">
       <el-steps v-if="model.status!=2" :active="model.status?(model.status==3?2:3):1" align-center>
-        <el-step title="申请中" description="$fun.formatDate( model.created_at,1)"></el-step>
+        <el-step title="申请中" :description="$fun.formatDate( model.created_at,1)"></el-step>
         <el-step title="平台审核" description=""></el-step>
         <el-step title="平台打款" description=""></el-step>
       </el-steps>

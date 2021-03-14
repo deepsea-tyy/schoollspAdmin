@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-        <el-button type="primary" @click="$router.push({path:'/promotion/edit'})">+添加优惠券</el-button>
+        <el-button type="primary" @click="$router.push({path:'/promotion/edit'})">+添加促销</el-button>
     </div>
 
     <el-table v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
@@ -12,22 +12,22 @@
       </el-table-column>
       <el-table-column align="center" label="开启时间">
         <template slot-scope="scope">
-          {{$fun.formatDate( scope.row.start_at,1)}}
+          {{$fun.formatDate( scope.row.start_at)}}
         </template>
       </el-table-column>
       <el-table-column label="结束时间">
         <template slot-scope="scope">
-          {{$fun.formatDate( scope.row.end_at,1)}}
+          {{$fun.formatDate( scope.row.end_at)}}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.status}}
+          {{ scope.row.status?'正常':'关闭'}}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="限令次数">
         <template slot-scope="scope">
-          {{ scope.row.receive_num}}
+          {{ scope.row.receive_num}} 次/人
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="发放数量">
@@ -38,7 +38,7 @@
       <el-table-column align="center" label="操作" width="180">
         <template slot-scope="scope">
           <div class="action">
-            <a @click="edit(scope.row)">  编辑| </a>
+            <a @click="edit(scope.row)">  编辑 | </a>
             <a v-if="scope.row.type == 1" @click="coupon(scope.row)"> 查看已领取优惠券</a>
           </div>
         </template>

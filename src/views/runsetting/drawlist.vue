@@ -16,9 +16,6 @@
           搜索
         </el-button>
       </div>
-      <div>
-        <el-button type="primary" @click="add(0)">+添加学校</el-button>
-      </div>
     </div>
 
     <el-table v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%" :tree-props="{children: 'area', hasChildren: 'hasChildren'}">
